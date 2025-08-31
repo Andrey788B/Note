@@ -13,14 +13,10 @@ export default function Workspace({ note }: { note: Note }) {
     const { updateNote, deleteNote } = useNotes();
     const [editing, setEditing] = useState(false);
     const [text, setText] = useState(note.content);
-
-
     // Автосохранение во время редактирования
     useAutosave(text, 800, (v) => {
         if (editing) updateNote(note.id, { content: String(v) });
     });
-
-
     const onDelete = () => {
         modals.openConfirmModal({
             title: 'Удалить заметку?',
