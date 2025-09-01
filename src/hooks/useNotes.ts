@@ -1,4 +1,4 @@
-// src/hooks/useNotes.ts
+
 import { useContext } from 'react';
 import { NotesContext } from '../context/notes-context';
 

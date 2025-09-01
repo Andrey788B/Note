@@ -1,32 +1,33 @@
-import { Button, ScrollArea, Stack } from '@mantine/core';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ScrollArea, Stack } from '@mantine/core'; 
+import { useState, useMemo } from 'react';
+import { useDebouncedValue } from '@mantine/hooks';
 import { useNotes } from '../hooks/useNotes';
 import SearchBox from './SearchBox';
 import NoteListItem from './NoteListItem';
 
 export default function Sidebar() {
-    const {  search, createNote } = useNotes();
-    const [q, setQ] = useState('');
-    const nav = useNavigate();
-    const filtered = search(q);
+  const { search } = useNotes();
+  const [q, setQ] = useState('');
+  const [qDebounced] = useDebouncedValue(q, 200);
+  const filtered = useMemo(() => search(qDebounced), [search, qDebounced]);
 
-    const onCreate = async () => {
-        const n = await createNote('# Новая заметка');
-        nav(`/note/${n.id}`);
-    };
+  return (
+    <Stack gap='xs' h='100%'>
+      <div className='sidebarTop'>
+        <SearchBox value={q} onChange={setQ} />
+      </div>
 
-    return (
-        <Stack p="sm" h="100%">
-            <SearchBox value={q} onChange={setQ} />
-            <Button onClick={onCreate}>Новая заметка</Button>
-            <ScrollArea style={{ flex: 1 }}>
-                <Stack gap="xs">
-                    {filtered.map((n) => (
-                    <NoteListItem key={n.id} note={n} />
-                    ))}
-                </Stack>
-            </ScrollArea>
+      <ScrollArea style={{ flex: 1 }}>
+        <Stack gap={4} className='noteListPad'>
+          {filtered.length ? (
+            filtered.map(n => <NoteListItem key={n.id} note={n} />)
+          ) : (
+            <div style={{ opacity: 0.6, fontSize: 12, padding: 8 }}>
+              Ничего не найдено…
+            </div>
+          )}
         </Stack>
-    );
+      </ScrollArea>
+    </Stack>
+  );
 }

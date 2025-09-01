@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login: AuthContextValue['login'] = async (email, _password) => {
-    void _password; 
+    void _password;
     const u = { uid: crypto.randomUUID(), email };
     localStorage.setItem('auth:user', JSON.stringify(u));
     setUser(u);
@@ -35,7 +35,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const value = useMemo<AuthContextValue>(() => ({ user, login, logout }), [user]);
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, login, logout }),
+    [user]
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
