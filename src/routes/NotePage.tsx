@@ -1,4 +1,3 @@
-
 import { useNavigate, useParams } from 'react-router-dom';
 import Workspace from '../components/Workspace';
 import { useNotes } from '../hooks/useNotes';
@@ -10,7 +9,7 @@ export default function NotePage({ createOnMount }: { createOnMount?: boolean })
   const { get, createNote } = useNotes();
   const nav = useNavigate();
   const [noteId, setNoteId] = useState<string | null>(id ?? null);
-  const createdRef = useRef(false); // <— предохранитель
+  const createdRef = useRef(false); 
 
   useEffect(() => {
     if (createOnMount) {
